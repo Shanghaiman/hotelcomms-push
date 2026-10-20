@@ -4,7 +4,8 @@
          The translatable="false" attribute is just an additional safety. -->
 
     <!-- Main app constants -->
-    <string name="app_name" translatable="false">ntfy</string>
+    <string name="app_name" translatable="false">HotelComms Push</string>
+    <string name="hc_restriction_default_base_url" translatable="false">Push server URL (set by MDM)</string>
     <string name="app_base_url" translatable="false">https://ntfy.sh</string> <!-- If changed, you must also change google-services.json! -->
 
     <!-- Main activity -->

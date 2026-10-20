@@ -465,7 +465,17 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         }
     }
 
+    // HotelComms (F44): push server delivered by MDM (Android managed configuration "defaultBaseUrl").
+    @Volatile private var managedDefaultBaseUrl: String? = null
+
+    fun refreshManagedConfig(context: Context) {
+        val rm = context.getSystemService(Context.RESTRICTIONS_SERVICE) as? android.content.RestrictionsManager
+        managedDefaultBaseUrl = rm?.applicationRestrictions?.getString("defaultBaseUrl")
+            ?.trim()?.trimEnd('/')?.takeIf { it.isNotEmpty() }
+    }
+
     fun getDefaultBaseUrl(): String? {
+        managedDefaultBaseUrl?.let { return it } // HotelComms: MDM value wins
         return sharedPrefs.getString(SHARED_PREFS_DEFAULT_BASE_URL, null) ?:
             sharedPrefs.getString(SHARED_PREFS_UNIFIED_PUSH_BASE_URL, null) // Fall back to UP URL, removed when default is set!
     }
@@ -722,7 +732,9 @@ class Repository(private val sharedPrefs: SharedPreferences, database: Database)
         fun getInstance(context: Context): Repository {
             val database = Database.getInstance(context.applicationContext)
             val sharedPrefs = context.getSharedPreferences(SHARED_PREFS_ID, Context.MODE_PRIVATE)
-            return getInstance(sharedPrefs, database)
+            val repository = getInstance(sharedPrefs, database)
+            repository.refreshManagedConfig(context.applicationContext) // HotelComms (F44)
+            return repository
         }
 
         private fun getInstance(sharedPrefs: SharedPreferences, database: Database): Repository {

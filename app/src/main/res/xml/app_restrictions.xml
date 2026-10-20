@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- HotelComms (F44): settings an MDM (Headwind) can push to this app -->
+<restrictions xmlns:android="http://schemas.android.com/apk/res/android">
+    <restriction
+        android:key="defaultBaseUrl"
+        android:title="@string/hc_restriction_default_base_url"
+        android:restrictionType="string"
+        android:defaultValue="" />
+</restrictions>
